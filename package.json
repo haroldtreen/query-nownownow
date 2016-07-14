@@ -1,0 +1,36 @@
+{
+  "name": "query-nownownow",
+  "version": "0.0.1",
+  "description": "Query NowNowNow",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haroldtreen/nownownow-query.git"
+  },
+  "keywords": [
+    "nownownow",
+    "search",
+    "query"
+  ],
+  "author": "Harold Treen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haroldtreen/nownownow-query/issues"
+  },
+  "homepage": "https://github.com/haroldtreen/nownownow-query#readme",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "openurl": "^1.1.1",
+    "request-promise": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.2",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^5.2.2"
+  }
+}
