@@ -1,6 +1,6 @@
 {
   "name": "query-nownownow",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Query http://nownownow.com and open matching profiles.",
   "main": "index.js",
   "scripts": {
@@ -8,20 +8,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/haroldtreen/nownownow-query.git"
+    "url": "git+https://github.com/haroldtreen/query-nownownow.git"
   },
   "keywords": [
     "nownownow",
     "search",
     "query",
-    "filter",
+    "filter"
   ],
   "author": "Harold Treen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/haroldtreen/nownownow-query/issues"
+    "url": "https://github.com/haroldtreen/query-nownownow/issues"
   },
-  "homepage": "https://github.com/haroldtreen/nownownow-query#readme",
+  "homepage": "https://github.com/haroldtreen/query-nownownow#readme",
   "dependencies": {
     "cheerio": "^0.20.0",
     "openurl": "^1.1.1",
