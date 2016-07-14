@@ -52,7 +52,9 @@ const getProfilesList = () => {
                         .attr('href'),
                 description: $(el).find('.subtitle').text(),
             };
-            profiles.push(profile);
+            if (profile.path) {
+                profiles.push(profile);
+            }
         });
         return Promise.resolve(profiles);
     });
@@ -68,7 +70,7 @@ const getProfile = (path) => {
     })
     .catch(() => {
         profileDownloadBar.tick();
-        Promise.resolve({});
+        return Promise.resolve({});
     });
 };
 
@@ -94,12 +96,8 @@ const getProfiles = (profilesList) => {
     const lessProfiles = limitProfiles(profilesList);
     profileDownloadBar = new ProgressBar('[:bar] :percent', { total: lessProfiles.length });
 
-    const profilePromises = lessProfiles.map((profile) => {
-        if (profile.path) {
-            return getProfile(profile.path);
-        }
-        return Promise.resolve({});
-    });
+    const profilePromises = lessProfiles.map((profile) => getProfile(profile.path));
+
     return Promise.all(profilePromises);
 };
 
@@ -109,7 +107,7 @@ const openProfiles = (queries) => {
     .then((profiles) => {
         const matchedProfiles = filterProfiles(queries, profiles);
         matchedProfiles.forEach((matchedProfile) => openurl.open(matchedProfile.url));
-        console.log('Done!');
+        console.log(`\nDone - ${matchedProfiles.length} profiles found.`);
     })
     .catch((error) => {
         console.log(error);
