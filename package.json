@@ -1,7 +1,7 @@
 {
   "name": "query-nownownow",
   "version": "0.0.1",
-  "description": "Query NowNowNow",
+  "description": "Query http://nownownow.com and open matching profiles.",
   "main": "index.js",
   "scripts": {
     "test": "node test/index.js"
