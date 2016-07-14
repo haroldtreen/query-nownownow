@@ -1,6 +1,6 @@
 # query-nownownow
 
-Search profiles on http://nownownow.com!
+Search profiles from http://nownownow.com!
 
 ### Why?
 
@@ -8,7 +8,7 @@ http://nownownow.com has a lot of interesting profiles. I wanted to be able to b
 
 ### Usage
 
-Pass the returned function regexs to match against.
+Pass `query-nownownow` regexs to match against profile fields.
 
 ```js
 const queryNow = require('query-nownownow');

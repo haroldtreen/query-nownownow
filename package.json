@@ -13,7 +13,8 @@
   "keywords": [
     "nownownow",
     "search",
-    "query"
+    "query",
+    "filter",
   ],
   "author": "Harold Treen",
   "license": "ISC",
@@ -24,6 +25,7 @@
   "dependencies": {
     "cheerio": "^0.20.0",
     "openurl": "^1.1.1",
+    "progress": "^1.1.8",
     "request-promise": "^3.0.0"
   },
   "devDependencies": {

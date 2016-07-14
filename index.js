@@ -1,9 +1,10 @@
 'use strict';
 
 const cheerio = require('cheerio');
-const requestPromise = require('request-promise');
 const openurl = require('openurl');
+const ProgressBar = require('progress');
 
+const requestPromise = require('request-promise');
 const request = requestPromise.defaults({
     pool: { maxSockets: Infinity },
     gzip: true,
@@ -12,11 +13,12 @@ const request = requestPromise.defaults({
 
 const NOW_HOME = 'http://nownownow.com/';
 const PROFILES_LIMIT = 100;
+let profileDownloadBar;
 
 const textAt = (elems, index) => elems.eq(index).text().trim().replace(new RegExp('\n', 'g'), ' ');
 
 const filterProfiles = (queries, profiles) => {
-    let reducedProfileSet = profiles;
+    let reducedProfileSet = profiles.filter((profile) => profile && profile.name); // Only successful profiles
     Object.keys(queries).forEach((key) => {
         const regex = queries[key];
         reducedProfileSet = reducedProfileSet.filter((profile) => regex.test(profile[key]));
@@ -24,7 +26,8 @@ const filterProfiles = (queries, profiles) => {
     return reducedProfileSet;
 };
 
-const getProfileDetails = ($) => {
+const getProfileDetails = (body) => {
+    const $ = cheerio.load(body);
     const paragraphs = $('p');
     return {
         name: $('h1.name').text().trim(),
@@ -36,7 +39,9 @@ const getProfileDetails = ($) => {
     };
 };
 
-const getAllProfiles = () => {
+const getProfilesList = () => {
+    console.log('Fetching Profiles List...');
+
     const profiles = [];
     return request(NOW_HOME).then((body) => {
         const $ = cheerio.load(body);
@@ -54,19 +59,17 @@ const getAllProfiles = () => {
 };
 
 const getProfile = (path) => {
-    if (!path) {
-        return Promise.resolve({});
-    }
     const url = NOW_HOME + path;
-    console.log(`Requesting ${url}`);
     return request(url).then((body) => {
-        console.log(`Done Requesting ${url}`);
-        const $ = cheerio.load(body);
-        const profileDetails = getProfileDetails($);
+        profileDownloadBar.tick();
+        const profileDetails = getProfileDetails(body);
         profileDetails.url = url;
         return Promise.resolve(profileDetails);
     })
-    .catch((error) => Promise.resolve({}));
+    .catch(() => {
+        profileDownloadBar.tick();
+        Promise.resolve({});
+    });
 };
 
 const shuffleArray = (array) => {
@@ -85,20 +88,33 @@ const shuffleArray = (array) => {
 
 const limitProfiles = (profiles) => shuffleArray(profiles).slice(0, PROFILES_LIMIT);
 
+const getProfiles = (profilesList) => {
+    console.log('Fetching Profiles...');
+
+    const lessProfiles = limitProfiles(profilesList);
+    profileDownloadBar = new ProgressBar('[:bar] :percent', { total: lessProfiles.length });
+
+    const profilePromises = lessProfiles.map((profile) => {
+        if (profile.path) {
+            return getProfile(profile.path);
+        }
+        return Promise.resolve({});
+    });
+    return Promise.all(profilePromises);
+};
+
 const openProfiles = (queries) => {
-    getAllProfiles().then((profiles) => {
-        const lessProfiles = limitProfiles(profiles);
-        const profilePromises = lessProfiles.map((profile) => getProfile(profile.path));
-        return Promise.all(profilePromises);
-    })
-    .then((profileResults) => {
-        const successfulProfiles = profileResults.filter((profile) => profile.name);
-        const matchedProfiles = filterProfiles(queries, successfulProfiles);
+    getProfilesList()
+    .then((profilesList) => getProfiles(profilesList))
+    .then((profiles) => {
+        const matchedProfiles = filterProfiles(queries, profiles);
         matchedProfiles.forEach((matchedProfile) => openurl.open(matchedProfile.url));
+        console.log('Done!');
     })
     .catch((error) => {
         console.log(error);
     });
+    return true;
 };
 
 module.exports = openProfiles;
