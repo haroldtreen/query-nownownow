@@ -1,5 +1,8 @@
 # query-nownownow
 
+[![npm](https://img.shields.io/npm/dt/query-nownownow.svg?maxAge=2592000)](https://www.npmjs.com/package/query-nownownow)
+[![npm](https://img.shields.io/npm/v/query-nownownow.svg?maxAge=2592000)](https://www.npmjs.com/package/query-nownownow)
+
 Search profiles from http://nownownow.com!
 
 ### Why?
